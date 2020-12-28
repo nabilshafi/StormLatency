@@ -48,7 +48,7 @@ public class FIleWriteBolt extends BaseRichBolt {
 
         String line = tuple.getString(0);
        // System.out.println(line);
-        csvWriter.writeRow(line);
+        csvWriter.writeRow(line+ "," + System.currentTimeMillis() );
               /*  writer.write(line);
                 writer.write("\n");*/
         //writer.flush();

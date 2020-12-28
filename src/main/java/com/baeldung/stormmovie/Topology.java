@@ -38,7 +38,7 @@ public class Topology {
         // Run topology
         LocalCluster localCluster = new LocalCluster();
         localCluster.submitTopology("my-first-topology", config, builder.createTopology());
-        Thread.sleep(150000);
+        Thread.sleep(95000);
        // System.out.println("Throughput: " + (System.nanoTime() - startTime));
         BufferedWriter wr = new BufferedWriter(new FileWriter("./src/main/resources/calculaterthroughput1m.csv"));
         wr.write((System.nanoTime() - startTime)+"");

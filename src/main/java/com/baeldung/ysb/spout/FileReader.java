@@ -84,16 +84,17 @@ public class FileReader extends BaseRichSpout {
             return;
         }
 
-        out.println( 0 + ":yahoo");
+        out.println( 0 + ":bids");
         String line = null;
         try {
+            int i = 0;
             while ((line = in.readLine()) != null) {
 
-
-
+                System.out.println(i++);
+                System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
                 line += "," + System.currentTimeMillis();
                 String[] str = line.split(",");
-                this.collector.emit(new Values(str[0],str[1],str[2],str[3],str[4],str[5],str[6],str[7]));
+                this.collector.emit(new Values(str[0],str[1],str[2],str[3],str[4],str[5]));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -128,7 +129,7 @@ public class FileReader extends BaseRichSpout {
 
     // The declareOutputFields function declares the output fields ("line") for the component.
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("user_id", "page_id", "ad_id", "ad_type", "event_type", "event_time", "ip_address","time"));
+        declarer.declare(new Fields("user_id", "page_id", "ad_id", "ad_type", "event_type", "event_time"));
 
     }
 

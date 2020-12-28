@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 public class FIleWriteBolt extends BaseRichBolt {
     public static Logger logger = LoggerFactory.getLogger(FIleWriteBolt.class);
@@ -24,6 +26,7 @@ public class FIleWriteBolt extends BaseRichBolt {
     private ObjectMapper objectMapper;
     Writer outputWriter;
     CsvWriter csvWriter;
+    HashMap<String, Integer> counterMap;
 
     @Override
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
@@ -44,8 +47,16 @@ public class FIleWriteBolt extends BaseRichBolt {
     @Override
     public void execute(Tuple tuple) {
 
-        csvWriter.writeRow(tuple.getString(2)+ "," + tuple.getString(3)+ "," +tuple.getString(4)+ "," +tuple.getString(5)+ "," +
-                tuple.getString(7)+ "," + System.currentTimeMillis() );
+
+        System.out.println("Key: " + tuple.getValueByField("key") + ": Value: " + tuple.getValueByField("value"));
+
+
+      /*  counterMap = (HashMap<String, Integer>) tuple.getValue(0).;
+
+
+        counterMap.forEach( (k,v) -> System.out.println("Key: " + k + ": Value: " + v));
+*/
+        //csvWriter.writeRow();
               /*  writer.write(line);
                 writer.write("\n");*/
         //writer.flush();

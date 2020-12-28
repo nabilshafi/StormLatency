@@ -6,7 +6,9 @@ import com.baeldung.ysb.bolt.FIleWriteBolt;
 import com.baeldung.ysb.spout.FileReader;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
+import org.apache.storm.starter.bolt.SlidingWindowSumBolt;
 import org.apache.storm.topology.TopologyBuilder;
+import org.apache.storm.topology.base.BaseWindowedBolt;
 import org.apache.storm.tuple.Fields;
 
 import java.io.BufferedWriter;
@@ -24,8 +26,11 @@ public class Topology {
         //The spout and the bolts are connected using shuffleGroupings. This type of grouping
         //tells Storm to send messages from the source node to target nodes in randomly distributed
         //fashion.
-
-        builder.setBolt("event_filter", new EventFilterBolt()).shuffleGrouping("word-reader");
+        /*builder.setBolt("slidingsum", new SlidingWindowSumBolt().withWindow(BaseWindowedBolt.Count.of(40), BaseWindowedBolt.Count.of(20)))
+                .shuffleGrouping("word-reader");
+*/
+        builder.setBolt("event_filter", new EventFilterBolt().withWindow(BaseWindowedBolt.Duration.of(1000), BaseWindowedBolt.Duration.of(500)))
+                .shuffleGrouping("word-reader");
 
         builder.setBolt("fileBolt", new FIleWriteBolt(filePath)).shuffleGrouping("event_filter");
 

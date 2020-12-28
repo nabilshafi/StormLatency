@@ -9,19 +9,19 @@ import org.apache.storm.topology.base.BaseRichSpout;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Values;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 
-import java.io.InputStreamReader;
+import java.net.Socket;
 import java.util.Map;
 
 public class FileReader extends BaseRichSpout {
 
     private SpoutOutputCollector collector;
-    private BufferedReader reader;
+    private BufferedReader reader,in;
     private boolean completed = false;
     private CsvParser parser;
+    private Socket echoSocket;
+    private PrintWriter out;
     // Called when Storm detects a tuple emitted successfully
     public void ack(Object msgId) {
         System.out.println("SUCCESS: " + msgId);
@@ -39,7 +39,24 @@ public class FileReader extends BaseRichSpout {
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
 
 
-        CsvParserSettings settings = new CsvParserSettings();
+
+
+        try {
+            echoSocket = new Socket("localhost", 31000);
+            out = new PrintWriter(echoSocket.getOutputStream(), true);
+            in = new BufferedReader(
+                    new InputStreamReader(echoSocket.getInputStream()));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+        /*CsvParserSettings settings = new CsvParserSettings();
         parser = new CsvParser(settings);
 
         String filePath = "/home/nabil/eclipse-workspace/tutorials/libraries-data/src/main/resources/ratings1m.csv";
@@ -48,7 +65,7 @@ public class FileReader extends BaseRichSpout {
             parser.beginParsing(new InputStreamReader(new FileInputStream(filePath)));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
 
         this.collector = collector;
     }
@@ -66,16 +83,26 @@ public class FileReader extends BaseRichSpout {
             return;
         }
 
+        out.println( 0 + ":persons");
+        String line = null;
+        try {
+            while ((line = in.readLine()) != null) {
+                line += "," + System.currentTimeMillis();
+                this.collector.emit(new Values(line));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
-        String[] row;
+     /*   String[] row;
         while ((row = parser.parseNext()) != null) {
             // println(out, Arrays.toString(row));
             String str = String.join(",", row);
             str += "," + System.nanoTime();
 
             this.collector.emit(new Values(str));
-        }
+        }*/
 
    /*     String line;
 

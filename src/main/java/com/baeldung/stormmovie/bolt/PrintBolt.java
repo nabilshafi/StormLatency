@@ -20,7 +20,7 @@ public class PrintBolt extends BaseBasicBolt {
 
 
         String line = input.getString(0);
-        line += "," + System.nanoTime();
+        //line += "," + System.nanoTime();
         collector.emit(new Values(line));
 
     }
