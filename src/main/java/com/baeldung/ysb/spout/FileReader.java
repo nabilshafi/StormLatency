@@ -90,8 +90,6 @@ public class FileReader extends BaseRichSpout {
             int i = 0;
             while ((line = in.readLine()) != null) {
 
-                System.out.println(i++);
-                System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
                 line += "," + System.currentTimeMillis();
                 String[] str = line.split(",");
                 this.collector.emit(new Values(str[0],str[1],str[2],str[3],str[4],str[5]));
